@@ -1,0 +1,28 @@
+import 'package:flutter/material.dart';
+import 'package:eksunav/screens/home_screen.dart';
+import 'package:eksunav/screens/location_screen.dart';
+import 'package:eksunav/screens/profile_screen.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'EksuNav',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/home', // The default screen to open
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/location': (context) => const LocationScreen(),
+        '/profile': (context) => const ProfileScreen(),
+      },
+    );
+  }
+}

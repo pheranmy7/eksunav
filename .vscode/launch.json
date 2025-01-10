@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/screens/location_screen.dart",
+            "args": [
+                "--dart-define",
+                "ACCESS_TOKEN=YOUR_PUBLIC_MAPBOX_ACCESS_TOKEN"
+            ],
+        }
+    ]
+}
