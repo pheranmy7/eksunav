@@ -37,6 +37,14 @@ dependencies:
   google_maps_flutter: ^2.10.0
   mapbox_maps_flutter: ^2.5.0
   flutter_map: ^7.0.2
+  location: ^5.0.0
+  dio: ^5.7.0
+  mapbox_gl: ^0.16.0
+  shared_preferences: ^2.3.5
+  cached_network_image: ^3.4.1
+  flutter_dotenv: ^5.2.1
+  carousel_slider: ^5.0.0
+  flutter_native_splash: ^2.2.16
 
 
 dev_dependencies:
