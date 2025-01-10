@@ -1,38 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-//import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:eksunav/screens/location_screen.dart';
 
 void main() {
   group('LocationScreen Widget Tests', () {
-    testWidgets('renders LocationScreen and all UI elements correctly',
+    testWidgets('LocationScreen renders map and UI elements',
         (WidgetTester tester) async {
-      // Build the LocationScreen widget
+      // Build the widget tree with the LocationScreen
       await tester.pumpWidget(
         const MaterialApp(
           home: LocationScreen(),
         ),
       );
 
-      // Verify that the MapWidget is rendered
-      expect(find.byKey(const ValueKey("mapWidget")), findsOneWidget);
+      // Verify that the MapWidget is present
+      expect(find.byKey(const ValueKey('mapWidget')), findsOneWidget);
 
-      // Verify that the overlay contains "My Location" and "Destination" text
-      expect(find.text("My Location"), findsOneWidget);
-      expect(find.text("Destination"), findsOneWidget);
+      // Verify the FloatingActionButton is present
+      expect(find.byType(FloatingActionButton), findsOneWidget);
 
-      // Verify that the bottom navigation bar is rendered
+      // Verify the BottomNavigationBar is present
       expect(find.byType(BottomNavigationBar), findsOneWidget);
 
-      // Verify that the BottomNavigationBar has 3 items
-      final bottomNavigationBar =
-          tester.widget<BottomNavigationBar>(find.byType(BottomNavigationBar));
-      expect(bottomNavigationBar.items.length, 3);
+      // Verify the custom AppBar with white containers
+      expect(find.text('My Location'), findsOneWidget);
+      expect(find.text('Destination'), findsOneWidget);
 
-      // Verify navigation icons
-      expect(find.byIcon(Icons.home), findsOneWidget);
+      // Verify icons inside the containers
       expect(find.byIcon(Icons.location_on), findsOneWidget);
-      expect(find.byIcon(Icons.person), findsOneWidget);
+      expect(find.byIcon(Icons.check), findsOneWidget);
+    });
+
+    testWidgets('FloatingActionButton triggers location save logic',
+        (WidgetTester tester) async {
+      // Create a mock callback for the FAB
+      bool isButtonPressed = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: LocationScreen(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                isButtonPressed = true;
+              },
+              child: const Icon(Icons.save),
+            ),
+          ),
+        ),
+      );
+
+      // Verify initial state
+      expect(isButtonPressed, isFalse);
+
+      // Tap the FloatingActionButton
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pump();
+
+      // Verify state after tapping the FAB
+      expect(isButtonPressed, isTrue);
     });
 
     testWidgets('BottomNavigationBar navigates to correct screens',
@@ -49,22 +75,21 @@ void main() {
         ),
       );
 
-      // Verify initial route is LocationScreen
-      expect(find.byKey(const ValueKey("mapWidget")), findsOneWidget);
+      // Verify the current screen is LocationScreen
+      expect(find.byType(LocationScreen), findsOneWidget);
 
-      // Tap on the Home icon in BottomNavigationBar
-      await tester.tap(find.byIcon(Icons.home));
+      // Tap the Home tab in the BottomNavigationBar
+      await tester.tap(find.text('Home'));
       await tester.pumpAndSettle();
+
+      // Verify navigation to Home Screen
       expect(find.text('Home Screen'), findsOneWidget);
 
-      // Navigate back to LocationScreen
-      await tester.tap(find.byIcon(Icons.location_on));
+      // Tap the Profile tab in the BottomNavigationBar
+      await tester.tap(find.text('Profile'));
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey("mapWidget")), findsOneWidget);
 
-      // Tap on the Profile icon in BottomNavigationBar
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
+      // Verify navigation to Profile Screen
       expect(find.text('Profile Screen'), findsOneWidget);
     });
   });

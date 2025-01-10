@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/database_service.dart';
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({super.key});
@@ -10,10 +12,27 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   MapboxMap? mapboxMap;
+  final DatabaseService _databaseService = DatabaseService();
+  final User? currentUser = FirebaseAuth.instance.currentUser;
 
   _onMapCreated(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
     print("Mapbox map created successfully!");
+  }
+
+  void _saveCurrentLocation() async {
+    if (mapboxMap != null && currentUser != null) {
+      CameraState cameraState = await mapboxMap!.getCameraState();
+      Map<String, dynamic> locationData = {
+        'latitude': cameraState.center.coordinates.lat,
+        'longitude': cameraState.center.coordinates.lng,
+        'zoom': cameraState.zoom,
+      };
+      await _databaseService.saveLocation(currentUser!.uid, locationData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Location saved successfully!')),
+      );
+    }
   }
 
   @override
@@ -122,6 +141,10 @@ class _LocationScreenState extends State<LocationScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _saveCurrentLocation,
+        child: const Icon(Icons.save),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
