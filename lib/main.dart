@@ -4,6 +4,7 @@ import 'package:eksunav/screens/home_screen.dart';
 import 'package:eksunav/screens/location_screen.dart';
 import 'package:eksunav/screens/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:eksunav/screens/auth_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/location': (context) => const LocationScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/auth': (context) => const AuthScreen(),
       },
     );
   }
