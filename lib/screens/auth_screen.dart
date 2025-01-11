@@ -5,43 +5,52 @@ import 'package:flutter/material.dart';
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
 
-  Future<void> signInWithGoogle() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
 
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-in successful!')),
+        );
+
+        // Navigate to the next screen (e.g., LocationScreen)
+        Navigator.pushNamed(context, '/location');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-in canceled by user.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
       );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('User Authentication')),
+      appBar: AppBar(
+        title: const Text('User Authentication'),
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            try {
-              await signInWithGoogle();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Sign-in successful!')),
-              );
-              // Navigate to the next screen (e.g., LocationScreen)
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error: $e')),
-              );
-            }
+            await signInWithGoogle(context);
           },
-          child: Text('Sign in with Google'),
+          child: const Text('Sign in with Google'),
         ),
       ),
     );
