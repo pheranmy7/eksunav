@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723486752622",
+    "project_id": "eksunav-fcce8",
+    "storage_bucket": "eksunav-fcce8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723486752622:android:4555bad1dda1ebcea94b7f",
+        "android_client_info": {
+          "package_name": "com.example.eksunav"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-P8I1ZsZoapkbyy_KjZT5afRu9hnNNE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
