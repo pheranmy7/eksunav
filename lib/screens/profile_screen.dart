@@ -13,7 +13,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Grey background color
+      backgroundColor: Colors.grey[160], // Grey background color
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: const Icon(
                   Icons.person,
                   size: 60,
-                  color: Colors.white,
+                  color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 24),

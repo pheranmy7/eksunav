@@ -50,8 +50,8 @@ class _LocationScreenState extends State<LocationScreen> {
             onMapCreated: _onMapCreated,
             cameraOptions: CameraOptions(
               center: Point(
-                  coordinates: Position(
-                      -3.1883, 55.9533)), // Example: Edinburgh, Scotland
+                  coordinates:
+                      Position(7.6233, 5.2200)), // Example: random for now
               zoom: 9.0, // Adjust the zoom level based on your preference
               bearing: 0.0,
               pitch: 0.0,
