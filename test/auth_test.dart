@@ -34,7 +34,8 @@ void main() {
               onPressed: () {
                 // Display the success SnackBar
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sign-in successful!')),
+                  const SnackBar(
+                      content: Text('Sign-in successful!,Welcome to EksuNav')),
                 );
               },
               child: const Text('Sign in with Google'),
@@ -49,7 +50,8 @@ void main() {
 
       // Verify SnackBar is displayed with the correct text
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Sign-in successful!'), findsOneWidget);
+      expect(
+          find.text('Sign-in successful!,Welcome to EksuNav'), findsOneWidget);
     });
 
     testWidgets('should display a SnackBar on sign-in error',

@@ -22,7 +22,8 @@ class AuthScreen extends StatelessWidget {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-in successful!')),
+          const SnackBar(
+              content: Text('Sign-in successful!,Welcome to EksuNav')),
         );
 
         // Navigate to the next screen (e.g., LocationScreen)

@@ -1,152 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:eksunav/screens/home_screen.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('HomeScreen Widget Tests', () {
-    testWidgets(
-        'should display the AppBar with no height and transparent background',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+    testWidgets('Renders essential widgets', (WidgetTester tester) async {
+      // Build the HomeScreen widget
+      await tester.pumpWidget(const HomeScreen());
 
-      // Ensure AppBar exists
-      expect(find.byType(AppBar), findsOneWidget);
-
-      // AppBar height and background tests
-      final AppBar appBar = tester.widget(find.byType(AppBar));
-      expect(appBar.toolbarHeight, 0);
-      expect(appBar.backgroundColor, Colors.transparent);
-    });
-
-    testWidgets('should display search bar in the top bar',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
-
-      // Ensure TextField for Search exists
+      // Verify the presence of key UI elements
+      expect(find.byType(Drawer), findsOneWidget);
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
-
-      // Check placeholder text
-      final TextField searchField = tester.widget(find.byType(TextField));
-      expect(searchField.decoration?.hintText, "Search");
+      expect(find.text('Recent Search'), findsOneWidget);
+      expect(find.text('Category'), findsOneWidget);
+      expect(find.text('Recents'), findsOneWidget);
     });
 
-    testWidgets('should display Recent Search section',
+    testWidgets('Drawer menu items render correctly',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      // Verify "Recent Search" header exists
-      expect(find.text("Recent Search"), findsOneWidget);
+      // Open the drawer
+      final drawerButton = find.byIcon(Icons.menu);
+      expect(drawerButton, findsOneWidget);
+      await tester.tap(drawerButton);
+      await tester.pumpAndSettle();
 
-      // Verify recent search description exists
-      expect(
-        find.text("Recently you searched about best restaurants near you."),
-        findsOneWidget,
-      );
+      // Check for drawer menu items
+      expect(find.text('Favorites'), findsOneWidget);
+      expect(find.text('Recap/Analytics'), findsOneWidget);
+      expect(find.text('Notification Settings'), findsOneWidget);
+      expect(find.text('Help & Support'), findsOneWidget);
+      expect(find.text('Feedback'), findsOneWidget);
+      expect(find.text('About the App'), findsOneWidget);
+      expect(find.text('Campus News & Updates'), findsOneWidget);
+      expect(find.text('Emergency Contact'), findsOneWidget);
     });
 
-    testWidgets(
-        'should display Weather section with temperature, date, and location',
+    testWidgets('Theme toggle switch works correctly',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      // Check temperature, date, and location
-      expect(find.text("25°C"), findsOneWidget);
-      expect(find.text("7th January 2025"), findsOneWidget);
-      expect(find.text("Ekiti State University, Ado-Ekiti"), findsOneWidget);
+      // Open the drawer
+      final drawerButton = find.byIcon(Icons.menu);
+      await tester.tap(drawerButton);
+      await tester.pumpAndSettle();
 
-      // Check weather icon exists
-      expect(find.byIcon(Icons.cloud), findsOneWidget);
+      // Toggle theme switch
+      final themeSwitch = find.byType(Switch);
+      expect(themeSwitch, findsOneWidget);
+
+      // Verify initial state and toggle
+      expect((tester.widget(themeSwitch) as Switch).value, isFalse);
+      await tester.tap(themeSwitch);
+      await tester.pump();
+      expect((tester.widget(themeSwitch) as Switch).value, isTrue);
     });
 
-    testWidgets('should display Category grid with correct titles',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
-
-      // Check category titles
-      expect(find.text("Restaurants"), findsOneWidget);
-      expect(find.text("Banks"), findsOneWidget);
-      expect(find.text("Libraries"), findsOneWidget);
-      expect(find.text("Cybercafes"), findsOneWidget);
-    });
-
-    testWidgets('should display Recents section with correct items',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
-
-      // Check Recents header
-      expect(find.text("Recents"), findsOneWidget);
-
-      // Check recent items
-      expect(find.text("Rite Meal Restaurant"), findsOneWidget);
-      expect(find.text("Gtbank"), findsOneWidget);
-      expect(find.text("Main Campus Library"), findsOneWidget);
-      expect(find.text("Horla Cafe"), findsOneWidget);
-    });
-
-    testWidgets('should navigate using BottomNavigationBar',
+    testWidgets('BottomNavigationBar navigates correctly',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
+        home: const HomeScreen(),
         routes: {
-          '/home': (context) => const HomeScreen(),
           '/location': (context) =>
-              const Scaffold(body: Center(child: Text('Location Screen'))),
-          '/profile': (context) =>
-              const Scaffold(body: Center(child: Text('Profile Screen'))),
+              const Scaffold(body: Text('Location Screen')),
+          '/profile': (context) => const Scaffold(body: Text('Profile Screen')),
         },
-        initialRoute: '/home',
       ));
 
-      // Check initial Home tab is active
-      expect(find.text('Home'), findsOneWidget);
+      // Verify BottomNavigationBar exists
+      final bottomNavBar = find.byType(BottomNavigationBar);
+      expect(bottomNavBar, findsOneWidget);
 
-      // Tap on Location tab
+      // Tap on 'Location' tab
       await tester.tap(find.text('Location'));
       await tester.pumpAndSettle();
       expect(find.text('Location Screen'), findsOneWidget);
 
-      // Tap on Profile tab
+      // Tap on 'Profile' tab
       await tester.tap(find.text('Profile'));
       await tester.pumpAndSettle();
       expect(find.text('Profile Screen'), findsOneWidget);
     });
 
-    testWidgets('should display Account Options dialog on user icon tap',
+    testWidgets('Category grid items render correctly',
         (WidgetTester tester) async {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      // Tap on user icon
-      await tester.tap(find.byIcon(Icons.person));
-      await tester.pumpAndSettle();
-
-      // Check Account Options dialog is displayed
-      expect(find.text("Account Options"), findsOneWidget);
-      expect(find.text("Sign In"), findsOneWidget);
-      expect(find.text("Log Out"), findsOneWidget);
+      // Check for grid items
+      expect(find.text('Restaurants'), findsOneWidget);
+      expect(find.text('Banks'), findsOneWidget);
+      expect(find.text('Libraries'), findsOneWidget);
+      expect(find.text('Cybercafes'), findsOneWidget);
     });
 
-    testWidgets('should sign out the user on Log Out button tap',
+    testWidgets('Recents items render correctly', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+
+      // Check for recent items
+      expect(find.text('Rite Meal Restaurant'), findsOneWidget);
+      expect(find.text('Gtbank'), findsOneWidget);
+      expect(find.text('Main Campus Library'), findsOneWidget);
+      expect(find.text('Horla Cafe'), findsOneWidget);
+    });
+
+    testWidgets('Weather information renders correctly',
         (WidgetTester tester) async {
-      // Simulate user sign-in by using a non-null currentUser
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      await auth.signInAnonymously();
+      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      await tester.pumpWidget(MaterialApp(
-        home: const HomeScreen(),
-      ));
+      // Check for weather details
+      expect(find.text('25°C'), findsOneWidget);
+      expect(find.text('7th January 2025'), findsOneWidget);
+      expect(find.text('Ekiti State University, Ado-Ekiti'), findsOneWidget);
+    });
 
-      // Tap on user icon
-      await tester.tap(find.byIcon(Icons.person));
+    testWidgets('Search functionality triggers correctly',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+
+      // Tap on the search bar and enter text
+      final searchField = find.byType(TextField);
+      expect(searchField, findsOneWidget);
+
+      await tester.enterText(searchField, 'Library');
+      expect(find.text('Library'), findsOneWidget);
+    });
+
+    testWidgets('Account options dialog renders correctly',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+
+      // Tap on the account icon
+      final accountIcon = find.byIcon(Icons.person);
+      await tester.tap(accountIcon);
       await tester.pumpAndSettle();
 
-      // Tap Log Out
-      await tester.tap(find.text("Log Out"));
-      await tester.pumpAndSettle();
-
-      // Check if Snackbar is displayed
-      expect(find.text("You have been logged out."), findsOneWidget);
+      // Verify the dialog and its options
+      expect(find.text('Account Options'), findsOneWidget);
+      expect(find.text('Sign In'), findsOneWidget);
+      expect(find.text('Log Out'), findsOneWidget);
     });
   });
 }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "161728297127-33hbl7267qgvusr575jduqsqvrhh2um0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.eksunav",
+            "certificate_hash": "e396210161feb21d3d4dc6734de65ce4e14e1d4c"
+          }
+        },
+        {
           "client_id": "161728297127-8eu1egl4g781n46cij1tv8lj8tqmig1t.apps.googleusercontent.com",
           "client_type": 3
         }
